@@ -28,15 +28,23 @@ public class WebSecurityConfig {
         //http.csrf(csrf -> csrf.disable())
         http.authorizeHttpRequests(
                 auth -> auth
-                        .requestMatchers("/saved").permitAll()
-                        .requestMatchers("/register").anonymous()
+                        .requestMatchers("/", "/css/**", "/js/**", "/images/**", "/saved",
+                                            "/login", "/register", "/resources/**")
+                        .permitAll()
+                        .requestMatchers("/home").authenticated()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/resources/**","/","/home").authenticated()
-                        .requestMatchers("/", "/passwordtest").anonymous()
+                        .anyRequest().authenticated()
         ).formLogin(
-                form -> form.defaultSuccessUrl("/home").permitAll()
+                form -> form
+                        .loginPage("/login")
+                        .failureUrl("/login?error")
+                        .defaultSuccessUrl("/home", true)
+                        .permitAll()
         ).logout(
-                logout -> logout.logoutSuccessUrl("/").permitAll()
+                logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
+                        .permitAll()
         );
         return http.build();
     }

@@ -13,26 +13,34 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AuthController {
     @Autowired private UserRepo userRepo;
 
+    @GetMapping("/login")
+    public String login() {
+        return "auth/login";
+    }
+
     @GetMapping("/register")
     public String register(Model model) {
         model.addAttribute("user", new User());
         return "auth/register";
     }
+
     @PostMapping("/saved")
     public String register(@ModelAttribute("user") User user,  RedirectAttributes redAttr) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         var user1 = userRepo.findByEmail(user.getEmail());
         if (user1.isPresent()) {
             redAttr.addFlashAttribute("message", "User already exists");
-            return "redirect:/register";
+            return "redirect:/register?error";
         }
-        if (user.getRole().equals("ADMIN")) {
-            redAttr.addFlashAttribute("message", "Only Admin can add an Admin");
-            return "redirect:/register";
-        }
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole("ROLE_USER");
         userRepo.save(user);
         redAttr.addFlashAttribute("message", "User registered successfully");
         return "redirect:/home";
+    }
+
+    @GetMapping("/logout")
+    public String logoutSuccess() {
+        return "auth/logout";
     }
 }

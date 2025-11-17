@@ -1,6 +1,6 @@
 <div xmlns:th="http://www.thymeleaf.org"
      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-    <div>
+    <!--<div>
         <span sec:authorize="isAnonymous()">
             <a th:href="@{/login}">Login</a>
         </span>
@@ -13,6 +13,14 @@
         </span>
         <span sec:authorize="hasRole('ROLE_ADMIN')">
             <a th:href="@{/admin/menu}">Admin</a>
+        </span>
+    </div>-->
+    <div>
+        <span sec:authorize="isAnonymous()">
+            <a th:href="@{/login}">Login</a>
+        </span>
+        <span sec:authorize="isAnonymous()">
+            <a th:href="@{/register}">Register</a>
         </span>
     </div>
     <div sec:authorize="isAuthenticated()">

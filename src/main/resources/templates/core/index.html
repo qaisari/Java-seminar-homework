@@ -1,10 +1,172 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Home</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neumann Student Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        :root { --brand-primary:#0d6efd; --brand-primary-dark:#0b5ed7; --accent:#1dd3a7; }
+        body { background:#f8fafc; }
+        .brand-bar{background:#fff;border-bottom:1px solid #e5e7eb}
+        .brand-title{font-weight:800;letter-spacing:.02em}
+        .hero{padding:2rem 0 3rem}
+        .hero-card{border:0;border-radius:1rem;overflow:hidden;box-shadow:0 16px 32px rgba(0,0,0,.08);background:#fff}
+        .hero-left{background:linear-gradient(135deg,var(--brand-primary),var(--brand-primary-dark));color:#fff;position:relative}
+        .hero-left .accent-bar{position:absolute;left:0;top:1.25rem;bottom:1.25rem;width:.5rem;background:var(--accent);border-radius:.5rem}
+        .hero-left-inner{padding:2rem 2rem 2rem 2.25rem}
+        .portal-name{text-transform:uppercase;letter-spacing:.16em;opacity:.9;font-size:.95rem}
+        .login-label{font-weight:700}
+        .pill-info{font-size:.875rem;color:#e2e8f0}
+        .login-btn{min-width:150px}
+        .hero-image{width:100%;height:100%;object-fit:cover;min-height:320px;border-top-left-radius:1rem;border-bottom-left-radius:1rem}
+        @media (max-width: 991.98px){.hero-image{border-radius:0;min-height:220px}}
+        .news-card{border:0;box-shadow:0 8px 18px rgba(0,0,0,.06);height:100%}
+        .news-card .card-title{font-weight:700}
+        footer{border-top:1px solid #e5e7eb;background:#fff;color:#6b7280}
+    </style>
 </head>
 <body>
-    <div th:insert="shared/menu"></div>
+    <!-- Brand bar -->
+    <nav class="brand-bar py-2">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-2">
+                <img th:src="@{/assets/neptune.png}" alt="Neptun" style="height:28px"/>
+                <span class="brand-title">John von Neumann University</span>
+            </div>
+            <div class="d-none d-md-block">
+                <a th:href="@{/login}" class="btn btn-outline-primary btn-sm me-2">Login</a>
+                <a th:href="@{/register}" class="btn btn-primary btn-sm">Register</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="row g-0 hero-card">
+                <!-- Left: login form -->
+                <div class="col-lg-5 position-relative hero-left">
+                    <div class="accent-bar"></div>
+                    <div class="hero-left-inner">
+                        <div class="portal-name mb-1">Student login</div>
+                        <div class="d-inline-block dropdown mb-3">
+                            <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">EN</button>
+                            <ul class="dropdown-menu">
+                                <li><button class="dropdown-item" type="button">EN</button></li>
+                                <li><button class="dropdown-item" type="button">HU</button></li>
+                            </ul>
+                        </div>
+
+                        <form th:action="@{/login}" method="post" class="mt-1">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+                            <div class="mb-2">
+                                <label for="email" class="form-label login-label">Email</label>
+                                <div class="input-group input-group-lg">
+                                    <input id="email" name="username" type="email" class="form-control" placeholder="Email" required>
+                                </div>
+                                <div class="form-text" style="opacity:.9">Use your university email address</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label login-label">Password</label>
+                                <div class="input-group input-group-lg">
+                                    <input id="password" name="password" type="password" class="form-control" placeholder="Password" required>
+                                </div>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg login-btn">Login</button>
+                            </div>
+                        </form>
+
+                        <div class="pill-info mt-3">Use your university credentials to access the internal dashboard.</div>
+                    </div>
+                </div>
+
+                <!-- Right: hero image -->
+                <div class="col-lg-7 bg-white p-0 d-flex align-items-stretch">
+                    <img th:src="@{/assets/neptune-b.png}" alt="Campus" class="hero-image"/>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News section -->
+    <section class="pb-5">
+        <div class="container">
+            <h3 class="fw-bold mb-3">News</h3>
+            <div class="row g-3">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card news-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Reimbursement and Benefits Policy</h5>
+                            <p class="text-muted small mb-2">3 September 2025 at 08:40</p>
+                            <p class="mb-2">The University Senate has made adjustments to the Reimbursement and Benefits Policy based on the 25/2025 decision.</p>
+                            <a href="#" class="link-primary small">More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card news-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Open Day for Prospective Students</h5>
+                            <p class="text-muted small mb-2">11 November 2025 at 10:46</p>
+                            <p class="mb-2">Meet faculty, explore programs, and learn about student life on campus during our upcoming open day.</p>
+                            <a href="#" class="link-primary small">More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card news-card">
+                        <div class="card-body">
+                            <h5 class="card-title">New Research Grants Awarded</h5>
+                            <p class="text-muted small mb-2">20 October 2025 at 12:15</p>
+                            <p class="mb-2">Several interdisciplinary teams received funding to drive innovation across engineering and applied sciences.</p>
+                            <a href="#" class="link-primary small">More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card news-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Alumni Networking Evening</h5>
+                            <p class="text-muted small mb-2">5 October 2025 at 18:00</p>
+                            <p class="mb-2">Join us for an evening of networking and mentorship opportunities with successful alumni.</p>
+                            <a href="#" class="link-primary small">More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card news-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Library Extends Opening Hours</h5>
+                            <p class="text-muted small mb-2">1 October 2025 at 09:00</p>
+                            <p class="mb-2">In response to student feedback, the library will now remain open until midnight during weekdays.</p>
+                            <a href="#" class="link-primary small">More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card news-card">
+                        <div class="card-body">
+                            <h5 class="card-title">International Week Announced</h5>
+                            <p class="text-muted small mb-2">24 September 2025 at 11:00</p>
+                            <p class="mb-2">Celebrate diversity with workshops, talks, and cultural events hosted by international student societies.</p>
+                            <a href="#" class="link-primary small">More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-3 mt-auto">
+        <div class="container d-flex justify-content-between flex-wrap">
+            <span>&copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}">2025</span> Neumann University – Student Management Portal</span>
+            <span class="mt-1 mt-sm-0">IT Services · Student Support</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

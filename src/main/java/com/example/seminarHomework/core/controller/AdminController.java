@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -22,12 +19,12 @@ public class AdminController {
         return "core/func/addUser";
     }
     @PostMapping("/admin/save")
-    public String saveUser(@ModelAttribute("user") User user, RedirectAttributes redAttr) {
+    public String saveUser(@ModelAttribute User user, RedirectAttributes redAttr) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         var user1 = userRepo.findByEmail(user.getEmail());
         if (user1.isPresent()) {
-            redAttr.addFlashAttribute("message", "There is already an account with that email address Id: " + user.getId());
+            redAttr.addFlashAttribute("warning", "There is already an account with that email address!");
             return "redirect:/admin/menu";
         }
         userRepo.save(user);
@@ -36,18 +33,23 @@ public class AdminController {
     }
 
     @GetMapping("/admin/edit/{id}")
-    public String UpdateUser(@PathVariable(name = "id") int id, Model model) {
-        model.addAttribute("user", userRepo.findById(id).get());
+    public String UpdateUser(@PathVariable(name = "id") Long id, Model model) {
+        if (userRepo.findById(id).isPresent()) {
+            model.addAttribute("user", userRepo.findById(id).get());
+        }
         return "core/func/edit";
     }
-    @PostMapping("/admin/update")
-    public String UpdateUser(@ModelAttribute User user){
-        userRepo.save(user);
+    @PostMapping(value = "/admin/update")
+    public String UpdateUser(@ModelAttribute User user, RedirectAttributes redirAttr){
+        if (user.getId() > 0) {
+            userRepo.save(user);
+        }
+        redirAttr.addFlashAttribute("message", user.getName() + " is updated! ID=" + user.getId());
         return "redirect:/admin/menu";
     }
 
     @GetMapping("/admin/delete/{id}")
-    public String DeleteUser(@PathVariable(name = "id") int id){
+    public String DeleteUser(@PathVariable(name = "id") Long id){
         userRepo.deleteById(id);
         return "redirect:/admin/menu";
     }
